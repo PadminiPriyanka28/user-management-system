@@ -7,6 +7,7 @@ const Login = ({ onLogin }) => {
     password: ''
   });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,9 +28,26 @@ const Login = ({ onLogin }) => {
       return;
     }
     
-    // Mock successful login (no backend connection yet)
-    onLogin();
-    navigate('/dashboard');
+    if (formData.username.length < 3) {
+      setError('Username must be at least 3 characters long');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+    
+    // Show loading state
+    setIsLoading(true);
+    
+    // Simulate API call with timeout
+    setTimeout(() => {
+      setIsLoading(false);
+      // Mock successful login (no backend connection yet)
+      onLogin();
+      navigate('/dashboard');
+    }, 1000);
   };
 
   return (
@@ -47,6 +65,7 @@ const Login = ({ onLogin }) => {
               value={formData.username}
               onChange={handleChange}
               placeholder="Enter your username"
+              disabled={isLoading}
             />
           </div>
           <div className="form-group">
@@ -58,9 +77,12 @@ const Login = ({ onLogin }) => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
+              disabled={isLoading}
             />
           </div>
-          <button type="submit" className="submit-btn">Login</button>
+          <button type="submit" className="submit-btn" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
+          </button>
         </form>
         <p className="auth-link">
           Don't have an account? <Link to="/signup">Sign Up</Link>
