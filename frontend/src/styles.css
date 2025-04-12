@@ -428,4 +428,47 @@ body {
 
 .save-btn:hover {
   background-color: #2980b9;
+}
+
+/* Confirmation Modal Styles */
+.confirm-modal {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.confirm-content {
+  text-align: center;
+}
+
+.confirm-content h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.confirm-content p {
+  margin-bottom: 1.5rem;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.confirm-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirm-btn:hover {
+  background-color: #c0392b;
 } 
