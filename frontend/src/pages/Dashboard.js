@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import UserModal from '../components/UserModal';
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [roleFilter, setRoleFilter] = useState('All');
   const [currentUserRole, setCurrentUserRole] = useState('Administrator'); // Default to Administrator for demo
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   // Mock user data (since we're not connecting to backend)
   useEffect(() => {
     const mockUsers = [
-      { id: 1, username: 'admin', role: 'Administrator', lastLogin: '2023-10-15' },
-      { id: 2, username: 'johndoe', role: 'User', lastLogin: '2023-10-14' },
-      { id: 3, username: 'janedoe', role: 'User', lastLogin: '2023-10-13' },
-      { id: 4, username: 'manager1', role: 'Manager', lastLogin: '2023-10-12' },
-      { id: 5, username: 'support1', role: 'Support', lastLogin: '2023-10-11' }
+      { id: 1, username: 'admin', role: 'Administrator', lastLogin: '2023-10-15', email: 'admin@example.com' },
+      { id: 2, username: 'johndoe', role: 'User', lastLogin: '2023-10-14', email: 'john@example.com' },
+      { id: 3, username: 'janedoe', role: 'User', lastLogin: '2023-10-13', email: 'jane@example.com' },
+      { id: 4, username: 'manager1', role: 'Manager', lastLogin: '2023-10-12', email: 'manager@example.com' },
+      { id: 5, username: 'support1', role: 'Support', lastLogin: '2023-10-11', email: 'support@example.com' }
     ];
     
     // Simulate API call delay
@@ -33,14 +36,28 @@ const Dashboard = () => {
 
   // Function to handle edit action
   const handleEdit = (userId) => {
-    alert(`Edit user with ID: ${userId}`);
+    const userToEdit = users.find(user => user.id === userId);
+    if (userToEdit) {
+      setSelectedUser(userToEdit);
+      setShowModal(true);
+    }
+  };
+
+  // Function to handle save in modal
+  const handleSaveUser = (updatedUser) => {
+    setUsers(users.map(user => 
+      user.id === updatedUser.id ? updatedUser : user
+    ));
+    setShowModal(false);
+    setSelectedUser(null);
+    alert(`User ${updatedUser.username} updated successfully!`);
   };
 
   // Function to handle delete action
   const handleDelete = (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      alert(`Delete user with ID: ${userId}`);
-      // In a real app, you would call an API and then update the state
+      setUsers(users.filter(user => user.id !== userId));
+      alert(`User deleted successfully!`);
     }
   };
 
@@ -111,6 +128,7 @@ const Dashboard = () => {
               <tr>
                 <th>ID</th>
                 <th>Username</th>
+                <th>Email</th>
                 <th>Role</th>
                 <th>Last Login</th>
                 <th>Actions</th>
@@ -121,6 +139,7 @@ const Dashboard = () => {
                 <tr key={user.id}>
                   <td>{user.id}</td>
                   <td>{user.username}</td>
+                  <td>{user.email || 'N/A'}</td>
                   <td>{user.role}</td>
                   <td>{user.lastLogin}</td>
                   <td>
@@ -148,6 +167,18 @@ const Dashboard = () => {
           <p className="no-results">No users found with the selected role.</p>
         )}
       </div>
+
+      {/* User Edit Modal */}
+      {showModal && (
+        <UserModal 
+          user={selectedUser}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedUser(null);
+          }}
+          onSave={handleSaveUser}
+        />
+      )}
     </div>
   );
 };
